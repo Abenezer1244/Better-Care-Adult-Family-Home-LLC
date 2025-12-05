@@ -213,9 +213,20 @@ gold: '#C5A059'
                 <a href="contact-us.html" class="hidden sm:flex items-center gap-2 bg-vintage-dark text-vintage-cream px-4 sm:px-6 py-2 sm:py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-vintage-red transition-colors">
                     Schedule Tour
                 </a>
-                <button id="mobile-menu-btn" class="md:hidden text-vintage-dark p-2 hover:bg-vintage-dark/5 rounded transition-colors" aria-label="Toggle menu">
-                    <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
-                    <i data-lucide="x" id="close-icon" class="w-6 h-6 hidden"></i>
+                <button id="mobile-menu-btn" type="button" class="md:hidden text-vintage-dark p-3 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-vintage-dark/5 active:bg-vintage-dark/10 rounded transition-colors touch-manipulation" aria-label="Toggle menu" aria-expanded="false">
+                    <span id="menu-icon" class="block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="12" x2="20" y2="12"></line>
+                            <line x1="4" y1="6" x2="20" y2="6"></line>
+                            <line x1="4" y1="18" x2="20" y2="18"></line>
+                        </svg>
+                    </span>
+                    <span id="close-icon" class="hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </span>
                 </button>
             </div>
         </div>
@@ -700,18 +711,19 @@ gold: '#C5A059'
         });
 
         // Mobile Menu Toggle - Ensure it works on mobile devices
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const menuIcon = document.getElementById('menu-icon');
-            const closeIcon = document.getElementById('close-icon');
+        (function() {
+            function initMobileMenu() {
+                const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+                const mobileMenu = document.getElementById('mobile-menu');
+                const menuIcon = document.getElementById('menu-icon');
+                const closeIcon = document.getElementById('close-icon');
 
-            if (mobileMenuBtn && mobileMenu && menuIcon && closeIcon) {
-                // Click handler for menu button (works for both click and touch)
-                mobileMenuBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
+                if (!mobileMenuBtn || !mobileMenu || !menuIcon || !closeIcon) {
+                    console.error('Mobile menu elements not found');
+                    return;
+                }
+
+                function toggleMenu() {
                     const isHidden = mobileMenu.classList.contains('hidden');
                     
                     if (isHidden) {
@@ -719,21 +731,35 @@ gold: '#C5A059'
                         mobileMenu.classList.remove('hidden');
                         menuIcon.classList.add('hidden');
                         closeIcon.classList.remove('hidden');
+                        mobileMenuBtn.setAttribute('aria-expanded', 'true');
                         document.body.style.overflow = 'hidden';
                     } else {
                         // Close menu
                         mobileMenu.classList.add('hidden');
                         menuIcon.classList.remove('hidden');
                         closeIcon.classList.add('hidden');
+                        mobileMenuBtn.setAttribute('aria-expanded', 'false');
                         document.body.style.overflow = '';
                     }
-                });
+                }
 
-                // Also add touchstart for better mobile support
-                mobileMenuBtn.addEventListener('touchstart', function(e) {
+                // Multiple event handlers for maximum compatibility
+                mobileMenuBtn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    mobileMenuBtn.click();
-                });
+                    e.stopPropagation();
+                    toggleMenu();
+                }, { passive: false });
+
+                // Touch events for mobile
+                mobileMenuBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleMenu();
+                }, { passive: false });
+
+                mobileMenuBtn.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                }, { passive: true });
 
                 // Close menu when clicking on links
                 const mobileMenuLinks = mobileMenu.querySelectorAll('a');
@@ -742,6 +768,7 @@ gold: '#C5A059'
                         mobileMenu.classList.add('hidden');
                         menuIcon.classList.remove('hidden');
                         closeIcon.classList.add('hidden');
+                        mobileMenuBtn.setAttribute('aria-expanded', 'false');
                         document.body.style.overflow = '';
                     });
                 });
@@ -752,6 +779,7 @@ gold: '#C5A059'
                         mobileMenu.classList.add('hidden');
                         menuIcon.classList.remove('hidden');
                         closeIcon.classList.add('hidden');
+                        mobileMenuBtn.setAttribute('aria-expanded', 'false');
                         document.body.style.overflow = '';
                     }
                 });
@@ -764,13 +792,20 @@ gold: '#C5A059'
                         mobileMenu.classList.add('hidden');
                         menuIcon.classList.remove('hidden');
                         closeIcon.classList.add('hidden');
+                        mobileMenuBtn.setAttribute('aria-expanded', 'false');
                         document.body.style.overflow = '';
                     }
                 });
-            } else {
-                console.error('Mobile menu elements not found');
             }
-        });
+
+            // Try to initialize immediately
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initMobileMenu);
+            } else {
+                // DOM is already ready
+                initMobileMenu();
+            }
+        })();
     </script>
 
 </body></html>
