@@ -131,32 +131,33 @@ filter: sepia(0.2) contrast(1.1) brightness(0.95) saturate(0.85);
         </div>
       </div>
       
-      <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden fixed inset-0 top-20 sm:top-20 bg-vintage-cream/98 backdrop-blur-md z-[60] border-t border-vintage-dark/10" style="display: none;">
-        <div class="flex flex-col h-full overflow-y-auto">
-          <div class="px-6 py-8 space-y-6">
-            <a href="index.html" class="block text-lg font-semibold text-vintage-dark tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4 hover:text-vintage-red transition-colors">
-              Home
-            </a>
-            <a href="about-us.html" class="block text-lg font-semibold text-vintage-dark tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4 hover:text-vintage-red transition-colors">
-              About Us
-            </a>
-            <a href="gallery.html" class="block text-lg font-semibold text-vintage-dark tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4 hover:text-vintage-red transition-colors">
-              Gallery
-            </a>
-            <a href="services.html" class="block text-lg font-semibold text-vintage-red tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4">
-              Services
-            </a>
-            <a href="contact-us.html" class="block text-lg font-semibold text-vintage-dark tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4 hover:text-vintage-red transition-colors">
-              Contact Us
-            </a>
-            <a href="contact-us.html" class="block mt-8 bg-vintage-dark text-vintage-cream px-6 py-4 text-sm font-bold uppercase tracking-widest hover:bg-vintage-red transition-colors text-center">
-              Schedule Tour
-            </a>
-          </div>
+    </nav>
+    
+    <!-- Mobile Menu - Moved outside nav for proper stacking context -->
+    <div id="mobile-menu" class="hidden fixed left-0 right-0 bottom-0 top-20 sm:top-20 bg-vintage-cream backdrop-blur-md z-[100] border-t border-vintage-dark/10" style="display: none !important;">
+      <div class="flex flex-col h-full overflow-y-auto bg-vintage-cream/98">
+        <div class="px-6 py-8 space-y-6">
+          <a href="index.html" class="block text-lg font-semibold text-vintage-dark tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4 hover:text-vintage-red transition-colors">
+            Home
+          </a>
+          <a href="about-us.html" class="block text-lg font-semibold text-vintage-dark tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4 hover:text-vintage-red transition-colors">
+            About Us
+          </a>
+          <a href="gallery.html" class="block text-lg font-semibold text-vintage-dark tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4 hover:text-vintage-red transition-colors">
+            Gallery
+          </a>
+          <a href="services.html" class="block text-lg font-semibold text-vintage-red tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4">
+            Services
+          </a>
+          <a href="contact-us.html" class="block text-lg font-semibold text-vintage-dark tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4 hover:text-vintage-red transition-colors">
+            Contact Us
+          </a>
+          <a href="contact-us.html" class="block mt-8 bg-vintage-dark text-vintage-cream px-6 py-4 text-sm font-bold uppercase tracking-widest hover:bg-vintage-red transition-colors text-center">
+            Schedule Tour
+          </a>
         </div>
       </div>
-    </nav>
+    </div>
 
     <!-- 1. New Look Hero Section -->
     <section class="relative pt-28 sm:pt-32 md:pt-40 lg:pt-48 pb-16 sm:pb-20 md:pb-24 lg:pb-32 px-4 sm:px-6 overflow-hidden">
@@ -764,23 +765,38 @@ filter: sepia(0.2) contrast(1.1) brightness(0.95) saturate(0.85);
               
               function openMenu() {
                   menuRef.classList.remove('hidden');
-                  menuRef.style.display = 'block';
-                  menuRef.style.visibility = 'visible';
-                  menuRef.style.opacity = '1';
-                  menuRef.style.height = 'auto';
+                  menuRef.style.setProperty('display', 'block', 'important');
+                  menuRef.style.setProperty('visibility', 'visible', 'important');
+                  menuRef.style.setProperty('opacity', '1', 'important');
                   menuIcon.classList.add('hidden');
                   closeIcon.classList.remove('hidden');
                   mobileMenuBtn.setAttribute('aria-expanded', 'true');
                   document.body.style.overflow = 'hidden';
-                  console.log('Menu opened', menuRef.classList.toString(), 'display:', window.getComputedStyle(menuRef).display, 'visibility:', window.getComputedStyle(menuRef).visibility, 'opacity:', window.getComputedStyle(menuRef).opacity);
+                  
+                  // Deep debugging
+                  const computed = window.getComputedStyle(menuRef);
+                  const rect = menuRef.getBoundingClientRect();
+                  console.log('=== MENU DEBUG ===');
+                  console.log('Display:', computed.display);
+                  console.log('Visibility:', computed.visibility);
+                  console.log('Opacity:', computed.opacity);
+                  console.log('Z-index:', computed.zIndex);
+                  console.log('Position:', computed.position);
+                  console.log('Top:', computed.top, 'Bottom:', computed.bottom);
+                  console.log('Left:', computed.left, 'Right:', computed.right);
+                  console.log('Width:', rect.width, 'Height:', rect.height);
+                  console.log('Bounding rect:', rect);
+                  console.log('Is visible in viewport:', rect.width > 0 && rect.height > 0);
+                  console.log('Parent element:', menuRef.parentElement);
+                  console.log('==================');
               }
 
               function closeMenu() {
                   menuRef.classList.add('hidden');
-                  menuRef.style.display = '';
-                  menuRef.style.visibility = '';
-                  menuRef.style.opacity = '';
-                  menuRef.style.height = '';
+                  menuRef.style.setProperty('display', 'none', 'important');
+                  menuRef.style.removeProperty('visibility');
+                  menuRef.style.removeProperty('opacity');
+                  menuRef.style.removeProperty('height');
                   menuIcon.classList.remove('hidden');
                   closeIcon.classList.add('hidden');
                   mobileMenuBtn.setAttribute('aria-expanded', 'false');
