@@ -759,17 +759,22 @@ filter: sepia(0.2) contrast(1.1) brightness(0.95) saturate(0.85);
                   return;
               }
 
+              // Store references before cloning
+              const menuRef = mobileMenu;
+              
               function openMenu() {
-                  mobileMenu.classList.remove('hidden');
+                  menuRef.classList.remove('hidden');
+                  menuRef.style.display = 'block';
                   menuIcon.classList.add('hidden');
                   closeIcon.classList.remove('hidden');
                   mobileMenuBtn.setAttribute('aria-expanded', 'true');
                   document.body.style.overflow = 'hidden';
-                  console.log('Menu opened');
+                  console.log('Menu opened', menuRef.classList.toString(), menuRef.style.display);
               }
 
               function closeMenu() {
-                  mobileMenu.classList.add('hidden');
+                  menuRef.classList.add('hidden');
+                  menuRef.style.display = '';
                   menuIcon.classList.remove('hidden');
                   closeIcon.classList.add('hidden');
                   mobileMenuBtn.setAttribute('aria-expanded', 'false');
@@ -778,7 +783,8 @@ filter: sepia(0.2) contrast(1.1) brightness(0.95) saturate(0.85);
               }
 
               function toggleMenu() {
-                  const isHidden = mobileMenu.classList.contains('hidden');
+                  const isHidden = menuRef.classList.contains('hidden');
+                  console.log('Toggle - isHidden:', isHidden, 'display:', window.getComputedStyle(menuRef).display);
                   if (isHidden) {
                       openMenu();
                   } else {
@@ -791,7 +797,7 @@ filter: sepia(0.2) contrast(1.1) brightness(0.95) saturate(0.85);
               mobileMenuBtn.parentNode.replaceChild(newBtn, mobileMenuBtn);
               const btn = document.getElementById('mobile-menu-btn');
               
-              // Get fresh references
+              // Get fresh references for icons only (menu stays the same)
               const icon = document.getElementById('menu-icon');
               const close = document.getElementById('close-icon');
 
@@ -821,7 +827,7 @@ filter: sepia(0.2) contrast(1.1) brightness(0.95) saturate(0.85);
               };
 
               // Close menu when clicking on links
-              const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+              const mobileMenuLinks = menuRef.querySelectorAll('a');
               mobileMenuLinks.forEach(link => {
                   link.onclick = function() {
                       closeMenu();
@@ -830,15 +836,15 @@ filter: sepia(0.2) contrast(1.1) brightness(0.95) saturate(0.85);
 
               // Close menu on escape key
               document.addEventListener('keydown', function(e) {
-                  if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                  if (e.key === 'Escape' && !menuRef.classList.contains('hidden')) {
                       closeMenu();
                   }
               });
 
               // Close menu when clicking outside
               document.addEventListener('click', function(e) {
-                  if (!mobileMenu.classList.contains('hidden') && 
-                      !mobileMenu.contains(e.target) && 
+                  if (!menuRef.classList.contains('hidden') && 
+                      !menuRef.contains(e.target) && 
                       !btn.contains(e.target)) {
                       closeMenu();
                   }
