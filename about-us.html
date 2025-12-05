@@ -123,7 +123,7 @@ gold: '#C5A059'
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 top-20 sm:top-20 bg-vintage-cream/98 backdrop-blur-md z-[60] border-t border-vintage-dark/10">
+        <div id="mobile-menu" class="hidden fixed inset-0 top-20 sm:top-20 bg-vintage-cream/98 backdrop-blur-md z-[60] border-t border-vintage-dark/10" style="display: none;">
             <div class="flex flex-col h-full overflow-y-auto">
                 <div class="px-6 py-8 space-y-6">
                     <a href="index.html" class="block text-lg font-semibold text-vintage-dark tracking-[0.15em] uppercase font-display border-b border-vintage-dark/10 pb-4 hover:text-vintage-red transition-colors">
@@ -485,16 +485,22 @@ gold: '#C5A059'
                 function openMenu() {
                     menuRef.classList.remove('hidden');
                     menuRef.style.display = 'block';
+                    menuRef.style.visibility = 'visible';
+                    menuRef.style.opacity = '1';
+                    menuRef.style.height = 'auto';
                     menuIcon.classList.add('hidden');
                     closeIcon.classList.remove('hidden');
                     mobileMenuBtn.setAttribute('aria-expanded', 'true');
                     document.body.style.overflow = 'hidden';
-                    console.log('Menu opened', menuRef.classList.toString(), menuRef.style.display);
+                    console.log('Menu opened', menuRef.classList.toString(), 'display:', window.getComputedStyle(menuRef).display, 'visibility:', window.getComputedStyle(menuRef).visibility, 'opacity:', window.getComputedStyle(menuRef).opacity);
                 }
 
                 function closeMenu() {
                     menuRef.classList.add('hidden');
                     menuRef.style.display = '';
+                    menuRef.style.visibility = '';
+                    menuRef.style.opacity = '';
+                    menuRef.style.height = '';
                     menuIcon.classList.remove('hidden');
                     closeIcon.classList.add('hidden');
                     mobileMenuBtn.setAttribute('aria-expanded', 'false');
